@@ -43,6 +43,20 @@ function! s:get_highlights() abort
     return l:highlights_dict
 endfunction
 
-function! darkokai#utils#get_all_colors()
-    return s:get_highlights()
+let s:colorscheme_highlights = s:get_highlights()
+
+function! darkokai#utils#refresh_highlights()
+    let s:colorscheme_highlights = s:get_highlights()
+endfunction
+
+function! darkokai#utils#get_all_highlights()
+    return s:colorscheme_highlights
+endfunction
+
+function! darkokai#utils#get_defined_highlights()
+    return filter(copy(s:colorscheme_highlights), '!empty(v:val)')
+endfunction
+
+function! darkokai#utils#get_cleared_highlights()
+    return sort(keys(filter(copy(s:colorscheme_highlights), 'empty(v:val)')))
 endfunction
