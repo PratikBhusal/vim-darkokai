@@ -30,9 +30,8 @@ function! s:map_highlight_group(key, val)
 endf
 
 function! s:get_highlights() abort
-    let l:highlights  = execute('highlight')
-    let l:highlights  = substitute(l:highlights, '\n\s\+', ' ', 'g')
-    let l:highlights  = split(l:highlights, '\n')
+    let l:highlights = substitute(execute('highlight'), '\n\s\+', ' ', 'g')
+    let l:highlights = split(l:highlights, '\n')
     call map(l:highlights, "split(v:val, '\\s\\+xxx\\s\\+')")
     call map(l:highlights, '[copy(v:val)[0], split(copy(v:val)[1], "links\\zs")]')
     call map(l:highlights, function('s:map_highlight_group'))
@@ -45,18 +44,18 @@ endfunction
 
 let s:colorscheme_highlights = s:get_highlights()
 
-function! darkokai#utils#refresh_highlights()
+function! darkokai#utils#highlight#refresh_highlights()
     let s:colorscheme_highlights = s:get_highlights()
 endfunction
 
-function! darkokai#utils#get_all_highlights()
+function! darkokai#utils#highlight#get_all_highlights()
     return s:colorscheme_highlights
 endfunction
 
-function! darkokai#utils#get_defined_highlights()
-    return filter(copy(s:colorscheme_highlights), '!empty(v:val)')
-endfunction
+" function! darkokai#utils#highlight#get_defined_highlights()
+"     return filter(copy(s:colorscheme_highlights), '!empty(v:val)')
+" endfunction
 
-function! darkokai#utils#get_cleared_highlights()
-    return sort(keys(filter(copy(s:colorscheme_highlights), 'empty(v:val)')))
-endfunction
+" function! darkokai#utils#highlight#get_cleared_highlights()
+"     return sort(keys(filter(copy(s:colorscheme_highlights), 'empty(v:val)')))
+" endfunction
