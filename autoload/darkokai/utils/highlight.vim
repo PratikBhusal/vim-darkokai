@@ -1,61 +1,32 @@
-function! s:map_highlight_group(key, val)
-    if a:val[1][0] ==# 'cleared'
-        return {a:val[0] : {}}
+function! darkokai#utils#highlight#set(group, fg, bg, style) " {{{
+    if exists('g:darkokai_highlight_groups') && !has_key(g:darkokai_highlight_groups, a:group)
+        let g:darkokai_highlight_groups[a:group] = 'explicit'
     endif
 
-    let l:colors = {}
+    execute 'highlight!' a:group
+        \ 'ctermbg=' . (has_key(a:bg,    'cterm')  ? a:bg.cterm     : 'NONE')
+        \ 'ctermfg=' . (has_key(a:fg,    'cterm')  ? a:fg.cterm     : 'NONE')
+        \
+        \ 'guibg='   . (has_key(a:bg,    'gui')    ? a:bg.gui       : 'NONE')
+        \ 'guifg='   . (has_key(a:fg,    'gui')    ? a:fg.gui       : 'NONE')
+        \
+        \ 'cterm='   . (has_key(a:style, 'format') ? a:style.format : 'NONE')
+        \ 'gui='     . (has_key(a:style, 'format') ? a:style.format : 'NONE')
+        \ 'guisp='   . (has_key(a:style, 'guisp')  ? a:style.guisp  : 'NONE')
+endfunction " }}}
 
-    " If the highlight group has any links to it, preprocess it
-    if len(a:val[1]) == 2 && a:val[1][1][:3] ==# ' to '
-        let colors['links'] = split(a:val[1][1])[-1]
+function! darkokai#utils#highlight#set_link(from_group, to_group) " {{{
+    if exists('g:darkokai_highlight_groups') && !has_key(g:darkokai_highlight_groups, a:from_group)
+        let g:darkokai_highlight_groups[a:from_group] = 'explicit'
     endif
 
-    " If group is not strictly a link, preprocess highlight info
-    if a:val[1][0] !=# 'links'
-        let l:F_extract_colors = {colors -> map(
-            \ map(
-                \ colors,
-                \ "split(v:val, '=')"
-            \ ),
-            \ '{v:val[0]: v:val[1]}'
-        \ )}
+    execute 'highlight! link' a:from_group a:to_group
+endfunction " }}}
 
-        call map(
-            \ l:F_extract_colors( split( split(a:val[1][0], '\slinks')[0] ) ),
-            \ 'extend(l:colors, v:val)'
-        \ )
+function! darkokai#utils#highlight#clear(group) " {{{
+    if exists('g:darkokai_highlight_groups') && !has_key(g:darkokai_highlight_groups, a:group)
+        let g:darkokai_highlight_groups[a:group] = 'explicit'
     endif
 
-    return {a:val[0] : l:colors}
-endf
-
-function! s:get_highlights() abort
-    let l:highlights = substitute(execute('highlight'), '\n\s\+', ' ', 'g')
-    let l:highlights = split(l:highlights, '\n')
-    call map(l:highlights, "split(v:val, '\\s\\+xxx\\s\\+')")
-    call map(l:highlights, '[copy(v:val)[0], split(copy(v:val)[1], "links\\zs")]')
-    call map(l:highlights, function('s:map_highlight_group'))
-
-    let l:highlights_dict = {}
-    call map(l:highlights, 'extend(l:highlights_dict, v:val)')
-
-    return l:highlights_dict
-endfunction
-
-let s:colorscheme_highlights = s:get_highlights()
-
-function! darkokai#utils#highlight#refresh_highlights()
-    let s:colorscheme_highlights = s:get_highlights()
-endfunction
-
-function! darkokai#utils#highlight#get_all_highlights()
-    return s:colorscheme_highlights
-endfunction
-
-" function! darkokai#utils#highlight#get_defined_highlights()
-"     return filter(copy(s:colorscheme_highlights), '!empty(v:val)')
-" endfunction
-
-" function! darkokai#utils#highlight#get_cleared_highlights()
-"     return sort(keys(filter(copy(s:colorscheme_highlights), 'empty(v:val)')))
-" endfunction
+    execute 'highlight! clear' a:group
+endfunction " }}}

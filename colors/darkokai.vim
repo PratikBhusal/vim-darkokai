@@ -8,9 +8,7 @@ if exists('syntax_on')
     syntax reset
 endif
 
-let s:darkokai_debug = get(g:, 'darkokai_debug', 0)
-
-if s:darkokai_debug
+if get(g:, 'darkokai#debug', v:false)
     let g:darkokai_highlight_groups = {}
 endif
 
@@ -18,7 +16,7 @@ endif
 let g:colors_name = 'darkokai'
 let s:colors = {}
 
-if has('gui_running') || has('vcon') || has('termguicolors')
+if has('gui_running') || has('termguicolors') || has('vcon')
     call darkokai#utils#colors#extend_gui_colors(s:colors)
 
     " :terminal colors {{{
@@ -70,37 +68,9 @@ if !has('gui_running')
     call darkokai#utils#colors#extend_cterm_colors(s:colors)
 endif
 
-function! s:hi(group, fg, bg, style) " {{{
-    if s:darkokai_debug && !has_key(g:darkokai_highlight_groups, a:group)
-        let g:darkokai_highlight_groups[a:group] = 'explicit'
-    endif
-    execute 'highlight!' a:group
-        \ 'ctermbg=' . (has_key(a:bg,    'cterm')  ? a:bg.cterm     : 'NONE')
-        \ 'ctermfg=' . (has_key(a:fg,    'cterm')  ? a:fg.cterm     : 'NONE')
-        \
-        \ 'guibg='   . (has_key(a:bg,    'gui')    ? a:bg.gui       : 'NONE')
-        \ 'guifg='   . (has_key(a:fg,    'gui')    ? a:fg.gui       : 'NONE')
-        \
-        \ 'cterm='   . (has_key(a:style, 'format') ? a:style.format : 'NONE')
-        \ 'gui='     . (has_key(a:style, 'format') ? a:style.format : 'NONE')
-        \ 'guisp='   . (has_key(a:style, 'guisp')  ? a:style.guisp  : 'NONE')
-endfunction " }}}
-
-function! s:hi_link(from_group, to_group) " {{{
-    if s:darkokai_debug && !has_key(g:darkokai_highlight_groups, a:from_group)
-        let g:darkokai_highlight_groups[a:from_group] = 'explicit'
-    endif
-
-    execute 'highlight! link' a:from_group a:to_group
-endfunction " }}}
-
-function! s:hi_clear(group) " {{{
-    if s:darkokai_debug && !has_key(g:darkokai_highlight_groups, a:group)
-        let g:darkokai_highlight_groups[a:group] = 'explicit'
-    endif
-
-    execute 'highlight! clear' a:group
-endfunction " }}}
+let s:hi = function('darkokai#utils#highlight#set')
+let s:hi_link = function('darkokai#utils#highlight#set_link')
+let s:hi_clear = function('darkokai#utils#highlight#clear')
 
 " Highlight Group Color Wrappers {{{
 call s:hi('DarkokaiBlackFg',     s:colors.black,     {},                 {})
@@ -226,7 +196,7 @@ call s:hi_link('Type',         'DarkokaiBlueFg')
 
 " :h group-name }}}
 
-" Filetype Syntax Highlighting {{{
+" Filetypes {{{
 
     " Vim {{{
     " call s:hi_link('vimIsCommand', 'DarkokaiOrangeFg')
@@ -268,30 +238,37 @@ call s:hi_link('Type',         'DarkokaiBlueFg')
 
     " NERDTree }}}
 
+    " Rainbow Parenthesis {{{
+    let g:rainbow_conf = {}
+    " let l:test_var = [ [ [ [ [ [ [1]]]]]]]
+    if has('gui_running') || has('termguicolors') || has('vcon')
+        let g:rainbow_conf['guifgs'] = [
+            \ s:colors.lightgray.gui,
+            \ s:colors.blue.gui,
+            \ s:colors.yellow.gui,
+            \ s:colors.diffchange.gui,
+        \ ]
+    endif
+    if !has('gui_running')
+        let g:rainbow_conf['ctermfgs'] = [
+            \ s:colors.lightgray.cterm,
+            \ s:colors.blue.cterm,
+            \ s:colors.yellow.cterm,
+        \ ]
+    endif
+    " Rainbow Parenthesis }}}
 " Plugins }}}
 
 augroup darkokai_utils " {{{
-  autocmd!
-  autocmd Syntax * call darkokai#utils#highlight#refresh_highlights()
-  autocmd Colorscheme *
-    \ if g:colors_name !=# 'darkokai' |
-    \   unlet! g:darkokai_highlight_groups |
-    \   autocmd! darkokai_utils |
-    \   if has('nvim') |
-    \   elseif has('terminal') |
-    \       unlet  g:terminal_ansi_colors |
-    \   endif |
-    \ endif
+    autocmd!
+    autocmd Colorscheme * call darkokai#utils#cleanup#settings()
+    autocmd Syntax      * call darkokai#utils#extract#refresh_highlights()
 augroup END " }}}
 
 unlet s:colors
-delfunction s:hi
-delfunction s:hi_link
-
-if  s:darkokai_debug
-    let g:darkokai_highlight_groups = keys(g:darkokai_highlight_groups)
-endif
 
 " Must be at the end, because of ctermbg=234 bug.
 " https://groups.google.com/forum/#!msg/vim_dev/afPqwAFNdrU/nqh6tOM87QUJ
 set background=dark
+
+call darkokai#utils#extract#refresh_highlights()
