@@ -21,7 +21,9 @@ function! s:map_highlight_group(key, val)
         \ )}
 
         call map(
-            \ l:F_extract_colors( split( split(a:val[1][0], '\slinks')[0] ) ),
+            \ l:F_extract_colors(
+                \ split( split(split(a:val[1][0], '\slinks')[0], 'font')[0] )
+            \ ),
             \ 'extend(l:colors, v:val)'
         \ )
     endif
@@ -37,7 +39,9 @@ function! s:get_highlights() abort
     call map(l:highlights, function('s:map_highlight_group'))
 
     let l:highlights_dict = {}
-    call map(l:highlights, 'extend(l:highlights_dict, v:val)')
+    for val in l:highlights
+        call extend(l:highlights_dict, val)
+    endfor
 
     return l:highlights_dict
 endfunction
