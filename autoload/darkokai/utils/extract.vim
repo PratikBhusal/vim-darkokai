@@ -62,6 +62,45 @@ function! darkokai#utils#extract#all_highlights()
     return s:colorscheme_highlights
 endfunction
 
+function! darkokai#utils#extract#trace() " {{{
+
+   let l:syntax_trace = 'SynStack:   '
+   let l:idlist       = synstack( line('.'), col('.') )
+
+    if !empty(l:idlist)
+        let l:syntax_trace = l:syntax_trace . synIDattr(l:idlist[0], 'name')
+        for id in idlist[1:]
+            let l:syntax_trace = l:syntax_trace . ' -> ' . synIDattr(l:id, 'name')
+        endfor
+    endif
+
+    let l:highlight_name  = synIDattr(l:idlist[-1], 'name')
+    let l:highlight_trace = 'HltTrace:   ' . l:highlight_name
+    let l:highlight_data  = s:colorscheme_highlights[l:highlight_name]
+
+    while has_key(l:highlight_data, 'links')
+        let l:highlight_name  = l:highlight_data.links
+        let l:highlight_trace = l:highlight_trace . ' -> ' . l:highlight_name
+        let l:highlight_data  = s:colorscheme_highlights[l:highlight_name]
+    endwhile
+
+    let l:fg = has_key(l:highlight_data, 'guifg')
+    \   ? l:highlight_data.guifg
+    \   : has_key(l:highlight_data, 'ctermfg')
+    \       ? l:highlight_data.ctermfg
+    \       : 'NONE'
+    let l:bg = has_key(l:highlight_data, 'guibg')
+    \   ? l:highlight_data.guibg
+    \   : has_key(l:highlight_data, 'ctermbg')
+    \       ? l:highlight_data.ctermbg
+    \       : 'NONE'
+
+    return l:syntax_trace . "\n" .
+    \      l:highlight_trace .
+    \      "\nForeground: " . l:fg .
+    \      "\nBackground: " . l:bg
+endfunction " }}}
+
 " function! darkokai#utils#highlight#get_defined_highlights()
 "     return filter(copy(s:colorscheme_highlights), '!empty(v:val)')
 " endfunction
