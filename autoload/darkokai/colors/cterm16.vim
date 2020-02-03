@@ -3,7 +3,7 @@ function! darkokai#colors#cterm16#get_colors()
 
     return {
         \ 'black'      : { 'cterm' : get( s:overrides, 'black',      '0'  ) },
-        \ 'blue'       : { 'cterm' : get( s:overrides, 'blue',       '12'  ) },
+        \ 'blue'       : { 'cterm' : get( s:overrides, 'blue',       '12' ) },
         \ 'brown'      : { 'cterm' : get( s:overrides, 'brown',      '3'  ) },
         \ 'cyan'       : { 'cterm' : get( s:overrides, 'cyan',       '14' ) },
         \ 'darkblack'  : { 'cterm' : get( s:overrides, 'darkblack',  '0'  ) },

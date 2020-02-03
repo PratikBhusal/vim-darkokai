@@ -1,7 +1,7 @@
 function! darkokai#utils#cleanup#settings()
     if g:colors_name !=# 'darkokai'
-        unlet! g:darkokai_highlight_groups
-        unlet! g:darkokai_undefined_highlights
+        unlet! g:darkokai#highlights#defined
+        unlet! g:darkokai#highlights#undefined
 
         if has('nvim')
             unlet!  g:terminal_color_0
