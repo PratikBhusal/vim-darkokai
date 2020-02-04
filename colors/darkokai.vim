@@ -110,15 +110,22 @@ call s:hi('StatusLineNC', s:colors.white,     s:colors.gray )
 call s:hi('StatusLine',   s:colors.blue,      s:colors.darkgray)
 call s:hi('VertSplit',    s:colors.white,     s:colors.darkgray)
 call s:hi('WildMenu',     s:colors.orange,    s:colors.gray)
+call s:hi('TabLine',      s:colors.white,     s:colors.darkgray)
+call s:hi('TabLineSel',   s:colors.blue,      s:colors.darkgray)
 
 call s:hi('MatchParen', {}, {}, {'format' : 'bold,underline'})
 call s:hi('Search',     {}, {}, {'format' : 'reverse,underline'})
+call s:hi('IncSearch',  {}, {}, {'format' : 'bold,reverse'})
 
 call s:hi('CursorLineNr', s:colors.yellow, s:colors.darkgray, {'format': 'bold'})
 
 call s:hi_link('ColorColumn', 'DarkokaiDarkGrayBg')
+call s:hi_link('diffAdded',   'DarkokaiGreenFg')
+call s:hi_link('diffChanged', 'DarkokaiOrangeFg')
+call s:hi_link('diffRemoved', 'DarkokaiRedFg')
 call s:hi_link('Directory',   'DarkokaiBlueFg')
 call s:hi_link('EndOfBuffer', 'DarkokaiLightGrayFg')
+call s:hi_link('ErrorMsg',    'DarkokaiRedFg')
 call s:hi_link('MoreMsg',     'DarkokaiYellowFg')
 call s:hi_link('PmenuSbar',   'DarkokaiDarkGrayBg')
 call s:hi_link('PmenuThumb',  'DarkokaiLightGrayBg')
@@ -126,6 +133,7 @@ call s:hi_link('Question',    'DarkokaiYellowFg')
 call s:hi_link('SpecialKey',  'DarkokaiDarkGrayFg')
 call s:hi_link('Visual',      'DarkokaiGrayBg')
 call s:hi_link('WarningMsg',  'DarkokaiRedFg')
+call s:hi_link('TabLineFill', 'DarkokaiDarkGrayBg')
 
 call s:hi_clear('LineNrAbove')
 call s:hi_clear('LineNrBelow')
@@ -144,12 +152,7 @@ call s:hi_link('ModeMsg', 'Normal', {'format' : 'bold'})
 "     lCursor
 "     CursorIM
 "     CorsorColumn
-"     Directory
-"     ErrorMsg
-"     IncSearch
-"     ModeMsg
 "     NonText
-"     Question
 "     QuickFixLine
 "     SpecialKey
 "     SpellBad
@@ -213,55 +216,6 @@ call s:hi_link('Macro',          'DarkokaiGreenFg')
 
 " :h group-name }}}
 
-" Misc {{{
-call s:hi_link('diffRemoved', 'DarkokaiRedFg')
-call s:hi_link('diffAdded', 'DarkokaiGreenFg')
-" Misc }}}
-
-" Filetypes {{{
-
-    " Vim {{{
-    call s:hi_link('vimAugroupKey', 'DarkokaiRedFg')
-    call s:hi_link('vimAugroup', 'DarkokaiGreenFg')
-    call s:hi_link('vimFunction', 'Function')
-    call s:hi_link('vimParenSep', 'vimSep')
-    call s:hi_link('vimUserFunc', 'Function')
-    call s:hi_link('vimCommand', 'DarkokaiRedFg')
-    " Vim }}}
-
-    " Python {{{
-    " Python }}}
-
-    " C/C++ {{{
-    call s:hi_link('cDefine', 'Define')
-    call s:hi_link('cCustomScope', 'DarkokaiLightGrayFg')
-    call s:hi_link('cppSTLnamespace', 'DarkokaiGreenFg')
-    call s:hi_link('cppSTLconstant', 'DarkokaiWhiteFg')
-    call s:hi_link('cppSTLios', 'DarkokaiWhiteFg')
-    call s:hi_link('cBlock', 'DarkokaiLightGrayFg')
-    "  }}}
-
-    " Java {{{
-    call s:hi_link('javaFunction', 'Function')
-    " Java }}}
-
-    " Doxygen {{{
-    call s:hi('doxygenDescription', s:colors.lightgray, {}, {'format' : 'bold'})
-
-    call s:hi_link('doxygenParamName', 'DarkokaiOrangeFg', {'format': 'underline'})
-
-    call s:hi_link('doxygenComment',            'DarkokaiLightGrayFg')
-    call s:hi_link('doxygenBrief',              'doxygenDescription')
-    call s:hi_link('doxygenComment',            'DarkokaiBlueFg')
-    call s:hi_link('doxygenBody',               'DarkokaiLightGrayFg')
-    call s:hi_link('doxygenLeadingWhite',       'doxygenDescription')
-    call s:hi_link('doxygenParam',              'DarkokaiRedFg')
-    call s:hi_link('doxygenSpecial',            'doxygenParam')
-    call s:hi_link('doxygenSpecialOnelineDesc', 'doxygenDescription')
-    " Doxygen }}}
-
-" Filetypes }}}
-
 " Plugins {{{
 
     " vim-gitgutter {{{
@@ -301,6 +255,9 @@ augroup darkokai_utils " {{{
     autocmd!
     autocmd Colorscheme * call darkokai#utils#cleanup#settings()
     autocmd Syntax      * call darkokai#utils#extract#refresh_highlights()
+    autocmd Filetype
+    \   c,cpp,vim,doxygen,java
+    \   call darkokai#ftplugin#reload_filetype()
 augroup END " }}}
 
 unlet s:colors

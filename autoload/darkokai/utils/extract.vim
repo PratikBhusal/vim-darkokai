@@ -29,7 +29,7 @@ function! s:map_highlight_group(key, val)
     endif
 
     return {a:key : l:colors}
-endf
+endfunction
 
 function! s:get_highlights() abort
     let l:highlights = split(
