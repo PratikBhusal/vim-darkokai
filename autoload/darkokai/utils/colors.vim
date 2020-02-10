@@ -1,10 +1,20 @@
 function! s:get_color_overrides(target)
+    if has('lambda')
+        return filter(
+        \   map(
+        \       copy( get(g:, 'darkokai_color_overrides', {}) ),
+        \       { _, val -> get(val, a:target, '') }
+        \   )
+        \   ,"v:val !=# ''"
+        \ )
+    endif
+
     return filter(
-        \ map(
-            \ copy( get(g:, 'darkokai_color_overrides', {}) ),
-            \ { _, val -> get(val, a:target, v:null) }
-        \ ),
-        \ 'v:val != v:null'
+    \   map(
+    \       copy( get(g:, 'darkokai_color_overrides', {}) ),
+    \       'darkokai#compatibility#lambda#color_override(v:val, a:target)'
+    \   )
+    \   ,"v:val !=# ''"
     \ )
 endfunction
 

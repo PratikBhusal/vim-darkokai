@@ -13,7 +13,7 @@ if exists('syntax_on')
     syntax reset
 endif
 
-if get(g:, 'darkokai#debug', v:false)
+if get(g:, 'darkokai#debug', 0)
     let g:darkokai#highlights#defined = {}
 endif
 

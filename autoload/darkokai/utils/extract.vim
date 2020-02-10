@@ -12,13 +12,17 @@ function! s:map_highlight_group(key, val)
 
     " If group is not strictly a link, preprocess highlight info
     if a:val[0] !=# 'links'
-        let l:F_extract_colors = {colors -> map(
-            \ map(
-                \ colors,
-                \ "split(v:val, '=')"
-            \ ),
-            \ '{v:val[0]: v:val[1]}'
-        \ )}
+        if has('lambda')
+            let l:F_extract_colors = {colors -> map(
+            \   map(
+            \       colors,
+            \       "split(v:val, '=')"
+            \   ),
+            \   '{v:val[0]: v:val[1]}'
+            \  )}
+        else
+            let l:F_extract_colors = function('darkokai#compatibility#lambda#highlight_map_split')
+        endif
 
         call map(
             \ l:F_extract_colors(
@@ -32,8 +36,16 @@ function! s:map_highlight_group(key, val)
 endfunction
 
 function! s:get_highlights() abort
+    " execute() needs has('patch-7-4-2008') to be true.
     let l:highlights = split(
-    \   substitute(execute('highlight'), '\n\s\+', ' ', 'g'),
+    \   substitute(
+    \       has('patch-7-4-2008')
+    \           ? execute('highlight')
+    \           : darkokai#compatibility#execute#call('highlight'),
+    \       '\n\s\+',
+    \       ' ',
+    \       'g'
+    \   ),
     \   '\n'
     \ )
 
