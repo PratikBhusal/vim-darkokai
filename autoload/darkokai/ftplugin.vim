@@ -26,21 +26,20 @@ function! s:doxygen()
     call s:hi_link('doxygenDescription', 'DarkokaiLightGrayFg', {'format'  : 'bold'})
     call s:hi_link('doxygenParamName',   'DarkokaiOrangeFg',    {'format': 'underline'})
 
-    call s:hi_link('doxygenComment',            'DarkokaiLightGrayFg')
-    call s:hi_link('doxygenBrief',              'doxygenDescription')
-    call s:hi_link('doxygenComment',            'DarkokaiBlueFg')
-    call s:hi_link('doxygenBody',               'DarkokaiLightGrayFg')
-    call s:hi_link('doxygenLeadingWhite',       'doxygenDescription')
-    call s:hi_link('doxygenParam',              'DarkokaiRedFg')
-    call s:hi_link('doxygenSpecial',            'doxygenParam')
-    call s:hi_link('doxygenSpecialOnelineDesc', 'doxygenDescription')
+    call s:hi_link('doxygenBody',                 'DarkokaiLightGrayFg')
+    call s:hi_link('doxygenBrief',                'DarkokaiWhiteFg')
+    call s:hi_link('doxygenComment',              'DarkokaiBlueFg')
+    call s:hi_link('doxygenLeadingWhite',         'doxygenDescription')
+    call s:hi_link('doxygenParam',                'DarkokaiRedFg')
+    call s:hi_link('doxygenSpecial',              'doxygenParam')
+    call s:hi_link('doxygenSpecialMultilineDesc', 'DarkokaiWhiteFg')
 
     autocmd! darkokai_utils FileType doxygen
 endfunction
 
 function! s:c()
-    call s:hi_link('cDefine',      'DarkokaiGreenFg')
-    call s:hi_link('cBlock',       'DarkokaiLightGrayFg')
+    call s:hi_link('cBlock',  'DarkokaiLightGrayFg')
+    call s:hi_link('cDefine', 'DarkokaiGreenFg')
 
     autocmd! darkokai_utils FileType c
 endfunction
@@ -53,10 +52,10 @@ function! s:cpp()
         call s:doxygen()
     endif
 
+    call s:hi_link('cCustomScope',    'DarkokaiLightGrayFg')
+    call s:hi_link('cppSTLconstant',  'DarkokaiWhiteFg')
+    call s:hi_link('cppSTLios',       'DarkokaiWhiteFg')
     call s:hi_link('cppSTLnamespace', 'DarkokaiGreenFg')
-    call s:hi_link('cppSTLconstant', 'DarkokaiWhiteFg')
-    call s:hi_link('cppSTLios', 'DarkokaiWhiteFg')
-    call s:hi_link('cCustomScope', 'DarkokaiLightGrayFg')
 
     autocmd! darkokai_utils FileType cpp
 endfunction
@@ -80,4 +79,6 @@ function! darkokai#ftplugin#reload_filetype()
     if exists('*' . l:filetype_function)
         exec 'call' l:filetype_function . '()'
     endif
+
+    call darkokai#utils#extract#refresh_highlights()
 endfunction
