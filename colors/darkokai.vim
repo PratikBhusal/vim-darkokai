@@ -246,6 +246,38 @@ call s:hi_link('Type',           'DarkokaiBlueFg')
         \ ]
     endif
     " Rainbow Parenthesis }}}
+
+    " hiPairs {{{
+    let g:hiPairs_hl_matchPair = get(
+        \   g:,
+        \   'hiPairs_hl_matchPair',
+        \   {'term': 'bold,underline'}
+    \ )
+    let g:hiPairs_hl_unmatchPair = get(
+        \   g:,
+        \   'hiPairs_hl_unmatchPair',
+        \   {'term': 'bold,underline'}
+    \ )
+
+    if has('gui_running') || has('termguicolors') || has('vcon')
+        let g:hiPairs_hl_matchPair['gui'] = 'bold,underline'
+        let g:hiPairs_hl_matchPair['guifg'] = s:colors.black.gui
+        let g:hiPairs_hl_matchPair['guibg'] = s:colors.yellow.gui
+
+        let g:hiPairs_hl_unmatchPair['gui'] = 'bold,underline'
+        let g:hiPairs_hl_unmatchPair['guifg'] = s:colors.white.gui
+        let g:hiPairs_hl_unmatchPair['guibg'] = s:colors.red.gui
+    endif
+    if !has('gui_running')
+        let g:hiPairs_hl_matchPair['cterm'] = 'bold,underline'
+        let g:hiPairs_hl_matchPair['ctermfg'] = s:colors.black.cterm
+        let g:hiPairs_hl_matchPair['ctermbg'] = s:colors.yellow.cterm
+
+        let g:hiPairs_hl_unmatchPair['cterm'] = 'bold,underline'
+        let g:hiPairs_hl_unmatchPair['ctermfg'] = s:colors.white.cterm
+        let g:hiPairs_hl_unmatchPair['ctermbg'] = s:colors.red.cterm
+    endif
+    " hiPairs }}}
 " Plugins }}}
 
 augroup darkokai_utils " {{{
