@@ -37,25 +37,28 @@ endfunction
 
 function! s:get_highlights() abort
     " execute() needs has('patch-7-4-2008') to be true.
-    let l:highlights = split(
-    \   substitute(
-    \       has('patch-7-4-2008')
-    \           ? execute('highlight')
-    \           : darkokai#compatibility#execute#call('highlight'),
-    \       '\n\s\+',
-    \       ' ',
-    \       'g'
+    let l:highlights = map(
+    \   split(
+    \       substitute(
+    \           has('patch-7-4-2008')
+    \               ? execute('highlight')
+    \               : darkokai#compatibility#execute#call('highlight'),
+    \           '\n\s\+',
+    \           ' ',
+    \           'g'
+    \       ),
+    \       '\n'
     \   ),
-    \   '\n'
+    \   "split(v:val, '\\s\\+xxx\\s\\+')"
     \ )
 
     let l:highlights_dict = {}
-    for l:list in map(l:highlights, "split(v:val, '\\s\\+xxx\\s\\+')")
+    for [l:name, l:settings; _] in l:highlights
         call extend(
         \   l:highlights_dict,
         \   s:map_highlight_group(
-        \       l:list[0],
-        \       split(l:list[1], "links\\zs")
+        \       l:name,
+        \       split(l:settings, "links\\zs")
         \   )
         \ )
     endfor
