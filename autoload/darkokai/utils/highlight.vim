@@ -21,13 +21,13 @@ endfunction " }}}
 
 function! s:set_link(from_group, to_group, style) " {{{
     if !empty(a:style)
-        let l:to_group_data = darkokai#utils#extract#all_highlights()[a:to_group]
+        let l:to_group_data = darkokai#utils#extract#highlight(a:to_group)
 
         while has_key(l:to_group_data, 'links')
-            let l:to_group_data = darkokai#utils#extract#all_highlights()[l:to_group_data.links]
+            let l:to_group_data = darkokai#utils#extract#highlight(l:to_group_data.links)
         endwhile
 
-        call darkokai#utils#highlight#set(a:from_group,
+        call s:set(a:from_group,
         \   {
         \       'cterm' : has_key(l:to_group_data, 'ctermfg')
         \           ? l:to_group_data.ctermfg

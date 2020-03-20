@@ -1,3 +1,25 @@
+function! s:split_highlights(group_name, begin, end) abort
+    " execute() needs has('patch-7-4-2008') to be true.
+    return map(
+    \   split(
+    \       substitute(
+    \           has('patch-7-4-2008')
+    \               ? execute('highlight ' . a:group_name)
+    \               : darkokai#compatibility#execute#call('highlight ' . a:group_name),
+    \           '\n\s\+',
+    \           ' ',
+    \           'g'
+    \       ),
+    \       '\n'
+    \   ),
+    \   "split(v:val, '\\s\\+xxx\\s\\+')[" . a:begin . ':' . a:end . ']'
+    \ )
+endfunction
+
+function! s:get_highlight_names() abort
+    return map(s:split_highlights('', 0, 0), 'v:val[0]')
+endfunction
+
 function! s:map_highlight_group(key, val)
     if a:val[0] ==# 'cleared'
         return {a:key : {}}
@@ -35,25 +57,9 @@ function! s:map_highlight_group(key, val)
     return {a:key : l:colors}
 endfunction
 
-function! s:get_highlights() abort
-    " execute() needs has('patch-7-4-2008') to be true.
-    let l:highlights = map(
-    \   split(
-    \       substitute(
-    \           has('patch-7-4-2008')
-    \               ? execute('highlight')
-    \               : darkokai#compatibility#execute#call('highlight'),
-    \           '\n\s\+',
-    \           ' ',
-    \           'g'
-    \       ),
-    \       '\n'
-    \   ),
-    \   "split(v:val, '\\s\\+xxx\\s\\+')"
-    \ )
-
+function! s:get_highlights_names_values(group_name) abort
     let l:highlights_dict = {}
-    for [l:name, l:settings; _] in l:highlights
+    for [l:name, l:settings] in s:split_highlights(a:group_name, 0, 1)
         call extend(
         \   l:highlights_dict,
         \   s:map_highlight_group(
@@ -66,19 +72,24 @@ function! s:get_highlights() abort
     return l:highlights_dict
 endfunction
 
-let s:colorscheme_highlights = s:get_highlights()
-
 function! darkokai#utils#extract#refresh_highlights()
-    let s:colorscheme_highlights = s:get_highlights()
-
     if exists('g:darkokai#highlights#defined')
+        let l:highlight_names = {}
+        for l:name in s:get_highlight_names()
+            let l:highlight_names[l:name] = 0
+        endfor
+
         let g:darkokai#highlights#undefined = keys(filter(
-            \ copy(s:colorscheme_highlights),
+            \ l:highlight_names,
             \ '!has_key(g:darkokai#highlights#defined, v:key)'
         \ ))
     endif
 endfunction
 
 function! darkokai#utils#extract#all_highlights()
-    return s:colorscheme_highlights
+    return s:get_highlights_names_values('')
+endfunction
+
+function! darkokai#utils#extract#highlight(group_name)
+    return s:get_highlights_names_values(a:group_name)[a:group_name]
 endfunction

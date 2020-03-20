@@ -11,17 +11,12 @@ function! darkokai#utils#debug#trace() " {{{
 
         let l:highlight_name  = synIDattr(l:idlist[-1], 'name')
         let l:highlight_trace = 'HltTrace:   ' . l:highlight_name
+        let l:highlight_data  = darkokai#utils#extract#highlight(l:highlight_name)
 
-        if !has_key(darkokai#utils#extract#all_highlights(), l:highlight_name)
-            call darkokai#utils#extract#refresh_highlights()
-        endif
-        let l:highlights = darkokai#utils#extract#all_highlights()
-
-        let l:highlight_data  = l:highlights[l:highlight_name]
         while has_key(l:highlight_data, 'links')
             let l:highlight_name  = l:highlight_data.links
             let l:highlight_trace = l:highlight_trace . ' -> ' . l:highlight_name
-            let l:highlight_data  = l:highlights[l:highlight_name]
+            let l:highlight_data  = darkokai#utils#extract#highlight(l:highlight_name)
         endwhile
 
         " TODO: Find way to show the color next to the #rrggbb/cterm cterm

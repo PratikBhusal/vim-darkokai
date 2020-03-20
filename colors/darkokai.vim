@@ -184,7 +184,6 @@ call s:hi_link('Identifier',     'DarkokaiOrangeFg')
 call s:hi_link('Include',        'DarkokaiRedFg')
 call s:hi_link('Keyword',        'DarkokaiRedFg')
 call s:hi_link('Macro',          'DarkokaiGreenFg')
-call s:hi_link('Number',         'DarkokaiPurpleFg')
 call s:hi_link('PreProc',        'DarkokaiRedFg')
 call s:hi_link('SpecialComment', 'Comment')
 call s:hi_link('Special',        'DarkokaiPurpleFg')
@@ -218,6 +217,17 @@ call s:hi_link('Type',           'DarkokaiBlueFg')
 " " TODO }}}
 
 " :h group-name }}}
+
+" Use default highlight for the following highlgiht groups {{{
+if exists('g:darkokai#highlights#defined')
+    for s:group in [
+    \   'Number',
+    \   'Float'
+    \ ]
+        call extend(g:darkokai#highlights#defined, {s:group : 'Default'})
+    endfor
+endif
+" Use default highlight for the following highlgiht groups }}}
 
 " Plugins {{{
 
@@ -283,7 +293,6 @@ call s:hi_link('Type',           'DarkokaiBlueFg')
 augroup darkokai_utils " {{{
     autocmd!
     autocmd Colorscheme * call darkokai#utils#cleanup#settings()
-    autocmd Syntax      * call darkokai#utils#extract#refresh_highlights()
     autocmd Filetype
     \   c,cpp,vim,doxygen,java
     \   call darkokai#ftplugin#reload_filetype()
@@ -295,4 +304,7 @@ unlet s:colors
 " https://groups.google.com/forum/#!msg/vim_dev/afPqwAFNdrU/nqh6tOM87QUJ
 set background=dark
 
-call darkokai#utils#extract#refresh_highlights()
+if get(g:, 'darkokai#debug', 0)
+    call darkokai#utils#extract#refresh_highlights()
+    autocmd darkokai_utils Syntax * call darkokai#utils#extract#refresh_highlights()
+endif

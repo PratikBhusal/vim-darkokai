@@ -78,9 +78,11 @@ function! darkokai#ftplugin#reload_filetype()
     let l:filetype_function = 's:' . &filetype
     if exists('*' . l:filetype_function)
         exec 'call' l:filetype_function . '()'
-    elseif g:darkokai#debug
+    elseif get(g:, 'darkokai#debug', 0)
         echoerr 'Found filetype that has no configurations'
     endif
 
-    call darkokai#utils#extract#refresh_highlights()
+    if get(g:, 'darkokai#debug', 0)
+        call darkokai#utils#extract#refresh_highlights()
+    endif
 endfunction
