@@ -60,6 +60,28 @@ function! s:cpp()
     autocmd! darkokai_utils FileType cpp
 endfunction
 
+function! s:html()
+    call s:hi_link('htmlLink',   'DarkokaiOrangeFg', {'format' : 'underline'})
+    call s:hi_link('htmlString', 'DarkokaiBlueFg',   {'format' : 'underline'})
+
+    autocmd! darkokai_utils FileType markdown
+endfunction
+
+function! s:markdown()
+    if exists('#darkokai_utils#FileType#html')
+        call s:html()
+    endif
+
+    call s:hi_link('mkdHeading', 'DarkokaiLightGrayFg')
+
+    call s:hi_link('mkdBold',      'mkdBold',             {'format' : 'bold'})
+    call s:hi_link('mkdInlineURL', 'DarkokaiBlueFg',      {'format' : 'underline'})
+    call s:hi_link('mkdItalic',    'mkdItalic',           {'format' : 'italic'})
+    call s:hi_link('mkdListItem',  'DarkokaiLightGrayFg', {'format' : 'bold'})
+
+    autocmd! darkokai_utils FileType markdown
+endfunction
+
 function! s:java()
     if exists('#darkokai_utils#FileType#doxygen')
         call s:doxygen()

@@ -1,7 +1,7 @@
 if !(
-\   has('gui_running') ||
-\   has('vcon') ||
-\   has('termguicolors') ||
+\   has('gui_running')    ||
+\   has('vcon')           ||
+\   has('termguicolors')  ||
 \   &t_Co > 15
 \ )
     finish
@@ -194,6 +194,8 @@ call s:hi_link('String',         'DarkokaiYellowFg')
 call s:hi_link('Structure',      'DarkokaiRedFg')
 call s:hi_link('Type',           'DarkokaiBlueFg')
 
+call s:hi_link('Underlined', 'DarkokaiLightGrayFg', {'format' : 'underline'})
+
 " " TODO {{{
 "     Number
 "     Boolean
@@ -211,7 +213,6 @@ call s:hi_link('Type',           'DarkokaiBlueFg')
 "     SpecialChar
 "     Tag
 "     Debug
-"     Underlined
 "     Ignore
 "     Error
 "     TODO
@@ -249,11 +250,19 @@ endif
     if has('gui_running') || has('termguicolors') || has('vcon')
         let g:rainbow_conf['guifgs'] = [
         \   s:colors.lightgray.gui,
+        \   s:colors.blue.gui,
+        \   s:colors.orange.gui,
+        \   s:colors.green.gui,
+        \   s:colors.green.gui,
         \ ]
     endif
     if !has('gui_running')
         let g:rainbow_conf['ctermfgs'] = [
         \   s:colors.lightgray.cterm,
+        \   s:colors.blue.cterm,
+        \   s:colors.orange.cterm,
+        \   s:colors.green.cterm,
+        \   s:colors.red.cterm,
         \ ]
     endif
     " Rainbow Parenthesis }}}
@@ -295,7 +304,7 @@ augroup darkokai_utils " {{{
     autocmd!
     autocmd Colorscheme * call darkokai#utils#cleanup#settings()
     autocmd Filetype
-    \   c,cpp,vim,doxygen,java
+    \   c,cpp,vim,doxygen,java,html,markdown
     \   call darkokai#ftplugin#reload_filetype()
 augroup END " }}}
 
@@ -308,4 +317,5 @@ set background=dark
 if get(g:, 'darkokai#debug', 0)
     call darkokai#utils#extract#refresh_highlights()
     autocmd darkokai_utils Syntax * call darkokai#utils#extract#refresh_highlights()
+    command! -nargs=0 HlTrace :echo darkokai#utils#debug#trace()
 endif

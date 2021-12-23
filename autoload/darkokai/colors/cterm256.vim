@@ -1,4 +1,4 @@
-function! darkokai#colors#cterm256#get_colors()
+function! darkokai#colors#cterm256#get_colors() abort
     let s:overrides = darkokai#utils#colors#get_cterm_overrides()
 
     return {
