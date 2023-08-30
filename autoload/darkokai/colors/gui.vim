@@ -19,5 +19,6 @@ function! darkokai#colors#gui#get_colors()
         \ 'red'        : { 'gui' : get( s:overrides, 'red',        '#f92672' ) },
         \ 'white'      : { 'gui' : get( s:overrides, 'white',      '#f8f8f2' ) },
         \ 'yellow'     : { 'gui' : get( s:overrides, 'yellow',     '#e6db74' ) },
+        \ 'dimgray'    : { 'gui' : get( s:overrides, 'dimgray',    '#323232' ) },
     \ }
 endfunction

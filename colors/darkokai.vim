@@ -92,6 +92,7 @@ call s:hi('DarkokaiWhiteFg',     s:colors.white,     {})
 call s:hi('DarkokaiYellowFg',    s:colors.yellow,    {})
 call s:hi('DarkokaiBlackBg',     {},                 s:colors.black)
 call s:hi('DarkokaiDarkGrayBg',  {},                 s:colors.darkgray)
+call s:hi('DarkokaiDimGrayBg',   {},                 s:colors.dimgray)
 call s:hi('DarkokaiGrayBg',      {},                 s:colors.gray)
 call s:hi('DarkokaiLightGrayBg', {},                 s:colors.lightgray)
 " Highlight Group Color Wrappers }}}
@@ -145,7 +146,7 @@ call s:hi_clear('LineNrBelow')
 if !has('nvim')
     call s:hi_clear('CursorLine')
 else
-    call s:hi_link('CursorLine', 'DarkokaiGrayBg')
+    call s:hi_link('CursorLine', 'DarkokaiDimGrayBg')
 endif
 
 call s:hi_link('ModeMsg', 'Normal', {'format' : 'bold'})

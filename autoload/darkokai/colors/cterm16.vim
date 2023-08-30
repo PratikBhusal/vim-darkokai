@@ -19,5 +19,6 @@ function! darkokai#colors#cterm16#get_colors() abort
         \ 'red'        : { 'cterm' : get( s:overrides, 'red',        '9'  ) },
         \ 'white'      : { 'cterm' : get( s:overrides, 'white',      '15' ) },
         \ 'yellow'     : { 'cterm' : get( s:overrides, 'yellow',     '11' ) },
+        \ 'dimgray'    : { 'gui'   : get( s:overrides, 'dimgray',    '3'  ) },
     \ }
 endfunction
