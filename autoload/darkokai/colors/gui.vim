@@ -2,7 +2,7 @@ function! darkokai#colors#gui#get_colors()
     let s:overrides = darkokai#utils#colors#get_gui_overrides()
 
     return {
-        \ 'black'      : { 'gui' : get( s:overrides, 'black',      '#1b1d1e' ) },
+        \ 'black'      : { 'gui' : get( s:overrides, 'black',      '#191919' ) },
         \ 'blue'       : { 'gui' : get( s:overrides, 'blue',       '#66d9ef' ) },
         \ 'brown'      : { 'gui' : get( s:overrides, 'brown',      '#75715e' ) },
         \ 'cyan'       : { 'gui' : get( s:overrides, 'cyan',       '#a1efe4' ) },
