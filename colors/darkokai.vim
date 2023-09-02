@@ -78,30 +78,32 @@ let s:hi_link  = function('darkokai#utils#highlight#set_link')
 let s:hi_clear = function('darkokai#utils#highlight#clear')
 
 " Highlight Group Color Wrappers {{{
-call s:hi('DarkokaiBlackFg',     s:colors.black,     {})
-call s:hi('DarkokaiBlueFg',      s:colors.blue,      {})
-call s:hi('DarkokaiBrownFg',     s:colors.brown,     {})
-call s:hi('DarkokaiCyanFg',      s:colors.cyan,      {})
-call s:hi('DarkokaiGrayFg',      s:colors.gray,      {})
-call s:hi('DarkokaiGreenFg',     s:colors.green,     {})
-call s:hi('DarkokaiLightGrayFg', s:colors.lightgray, {})
-call s:hi('DarkokaiOrangeFg',    s:colors.orange,    {})
-call s:hi('DarkokaiPurpleFg',    s:colors.purple,    {})
-call s:hi('DarkokaiRedFg',       s:colors.red,       {})
-call s:hi('DarkokaiWhiteFg',     s:colors.white,     {})
-call s:hi('DarkokaiYellowFg',    s:colors.yellow,    {})
-call s:hi('DarkokaiBlackBg',     {},                 s:colors.black)
-call s:hi('DarkokaiDarkGrayBg',  {},                 s:colors.darkgray)
-call s:hi('DarkokaiDimGrayBg',   {},                 s:colors.dimgray)
-call s:hi('DarkokaiGrayBg',      {},                 s:colors.gray)
-call s:hi('DarkokaiLightGrayBg', {},                 s:colors.lightgray)
+call s:hi('DarkokaiBlackFg',      s:colors.black,     {})
+call s:hi('DarkokaiBlueFg',       s:colors.blue,      {})
+call s:hi('DarkokaiBrownFg',      s:colors.brown,     {})
+call s:hi('DarkokaiCyanFg',       s:colors.cyan,      {})
+call s:hi('DarkokaiGrayFg',       s:colors.gray,      {})
+call s:hi('DarkokaiGreenFg',      s:colors.green,     {})
+call s:hi('DarkokaiLightGrayFg',  s:colors.lightgray, {})
+call s:hi('DarkokaiOrangeFg',     s:colors.orange,    {})
+call s:hi('DarkokaiPurpleFg',     s:colors.purple,    {})
+call s:hi('DarkokaiTextFg',       s:colors.difftext,  {})
+call s:hi('DarkokaiRedFg',        s:colors.red,       {})
+call s:hi('DarkokaiWhiteFg',      s:colors.white,     {})
+call s:hi('DarkokaiYellowFg',     s:colors.yellow,    {})
+call s:hi('DarkokaiBlackBg',      {},                 s:colors.black)
+call s:hi('DarkokaiDarkGrayBg',   {},                 s:colors.darkgray)
+call s:hi('DarkokaiDiffAddBg',    {},                 s:colors.diffadd)
+call s:hi('DarkokaiDiffChangeBg', {},                 s:colors.diffchange)
+call s:hi('DarkokaiDimGrayBg',    {},                 s:colors.dimgray)
+call s:hi('DarkokaiGrayBg',       {},                 s:colors.gray)
+call s:hi('DarkokaiLightGrayBg',  {},                 s:colors.lightgray)
+" Testing line here!
 " Highlight Group Color Wrappers }}}
 
 " :h highlight-default {{{
-call s:hi('DiffAdd',      {},                 s:colors.diffadd)
-call s:hi('DiffChange',   {},                 s:colors.diffchange)
-call s:hi('DiffDelete',   s:colors.white,     s:colors.diffdel)
-call s:hi('DiffText',     s:colors.black,     s:colors.blue)
+call s:hi('DiffDelete',   s:colors.gray, s:colors.diffdel)
+call s:hi('DiffText',     s:colors.black,     s:colors.difftext)
 call s:hi('FoldColumn',   s:colors.lightgray, s:colors.darkgray)
 call s:hi('Folded',       s:colors.lightgray, s:colors.darkblack)
 call s:hi('LineNr',       s:colors.lightgray, s:colors.darkgray)
@@ -122,9 +124,8 @@ call s:hi('Search',     {}, {}, {'format' : 'reverse,underline'})
 call s:hi('CursorLineNr', s:colors.yellow, s:colors.darkgray, {'format': 'bold'})
 
 call s:hi_link('ColorColumn', 'DarkokaiDarkGrayBg')
-call s:hi_link('diffAdded',   'DarkokaiGreenFg')
-call s:hi_link('diffChanged', 'DarkokaiOrangeFg')
-call s:hi_link('diffRemoved', 'DarkokaiRedFg')
+call s:hi_link('DiffAdd',     'DarkokaiDiffAddBg')
+call s:hi_link('DiffChange',  'DarkokaiDiffChangeBg')
 call s:hi_link('Directory',   'DarkokaiBlueFg')
 call s:hi_link('EndOfBuffer', 'DarkokaiBlackFg')
 call s:hi_link('ErrorMsg',    'DarkokaiRedFg')
@@ -134,11 +135,11 @@ call s:hi_link('PmenuThumb',  'DarkokaiLightGrayBg')
 call s:hi_link('Question',    'DarkokaiYellowFg')
 call s:hi_link('SignColumn',  'LineNr')
 call s:hi_link('SpecialKey',  'DarkokaiDarkGrayFg')
-call s:hi_link('Whitespace',  'DarkokaiDarkGrayFg')
 call s:hi_link('TabLineFill', 'DarkokaiDarkGrayBg')
 call s:hi_link('Title',       'DarkokaiYellowFg')
 call s:hi_link('Visual',      'DarkokaiGrayBg')
 call s:hi_link('WarningMsg',  'DarkokaiRedFg')
+call s:hi_link('Whitespace',  'DarkokaiDarkGrayFg')
 
 call s:hi_clear('LineNrAbove')
 call s:hi_clear('LineNrBelow')
@@ -220,6 +221,16 @@ call s:hi_link('Underlined', 'DarkokaiLightGrayFg', {'format' : 'underline'})
 " " TODO }}}
 
 " :h group-name }}}
+
+" Git-specific highlights {{{
+
+" Reference: /usr/share/vim/vim90/syntax/git.vim
+
+call s:hi_link('diffAdded',   'DarkokaiGreenFg')
+call s:hi_link('diffChanged', 'DarkokaiTextFg')
+call s:hi_link('diffRemoved', 'DarkokaiRedFg')
+
+" Git-specific highlights }}}
 
 " Use default highlight for the following highlgiht groups {{{
 if exists('g:darkokai#highlights#defined')
